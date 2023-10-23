@@ -1,0 +1,18 @@
+# Versión del formato
+version: "3"
+
+# Servicios
+services:
+  # Servicio web
+  web:
+    # Imagen a usar
+    build: .
+    # Puertos a publicar
+    ports:
+      - "5000:5000"
+    # Variables de entorno
+    environment:
+      - FLASK_APP=app.py
+    # Volúmenes a montar
+    volumes:
+      - .:/app
