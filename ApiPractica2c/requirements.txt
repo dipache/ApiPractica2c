@@ -1,3 +1,1 @@
 Flask==2.0.2
-json
-psycopg2==2.9.9
