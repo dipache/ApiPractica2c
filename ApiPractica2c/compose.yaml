@@ -1,14 +1,39 @@
-version: "3"
+version: '3.9'
 
 services:
-  web:
+  postgres-db:
+    image: 'postgres:15.0-alpine'
+    restart: always
+    environment:
+      POSTGRES_DB: cnp2_database
+      POSTGRES_USER: cnp2_user
+      POSTGRES_PASSWORD: my_cool_secret_2
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cnp2_net
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      start_period: 30s
+
+  flask-app:
     build:
       context: .
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "5000:5000"
+      - 8083:5000
     environment:
-      - FLASK_APP=app.py
-    volumes:
-      - .:/app
+      SQLALCHEMY_DATABASE_URI: postgresql://cnp2_user:my_cool_secret_2@postgres-db:5432/cnp2_database
+    networks:
+      - cnp2_net
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+        restart: true
+
+volumes:
+  postgres_data:
+
+networks:
+  cnp2_net:
