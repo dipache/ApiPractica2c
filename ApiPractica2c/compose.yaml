@@ -1,13 +1,21 @@
+
 version: "3"
 
+
 services:
+  # Servicio web
   web:
-    build:
-      context: ${PWD}
-      dockerfile: ${PWD}/Dockerfile
+   
+    build: .
+     context: .
+      dockerfile: Dockerfile
+    restart: always
+ 
     ports:
       - "5000:5000"
+   
     environment:
       - FLASK_APP=app.py
+   
     volumes:
       - .:/app
